@@ -6,7 +6,7 @@
 
 	<title>Minimax Reversi</title>
 	
-	<link type="text/css" href="../../css/main.css" rel="stylesheet">
+	<link type="text/css" href="css/reversi.css" rel="stylesheet">
 	
 	<script src="../../js/lib/jquery-1.11.1_.js"></script>
 	<script src="../../js/src/gameLoop/GameLoopConstants.js"></script>
@@ -31,36 +31,49 @@
 	<script src="../../js/src/reversi/ui/BoardGameEntity.js"></script>
 	<script src="../../js/src/reversi/ui/BoardCellGameEntity.js"></script>
 	<script src="../../js/src/reversi/ui/GameUIController.js"></script>
+	<script src="../../js/src/reversi/ui/UIController.js"></script>
 	<script>
 	$(document).ready(main);
 	
 	function main() {
-		
-		var gameBoardEntity = new REVERSI.BoardGameEntity();
-			
-		var gameEntitiesIdx = 0;
-		var gameEntities = [];
-		var boardCellGameEntities = [];
-		gameEntities[gameEntitiesIdx++] = gameBoardEntity;		
-		for(var x = 0; x < 8; x++) {
-			boardCellGameEntities[x] = [];
-			for(var y = 0; y < 8; y++) {
-				var boardCellGameEntity = new REVERSI.BoardCellGameEntity(x, y, REVERSI.TOKEN_TYPE_EMPTY);
-				gameEntities[gameEntitiesIdx++] = boardCellGameEntity;
-				boardCellGameEntities[x][y] = boardCellGameEntity;
-			}
-		}
-		gameEntities[gameEntitiesIdx++] = new REVERSI.GameUIController(boardCellGameEntities);	
-		
-		var inputEventQueue = new GAME_LOOP.Queue(10);
-		new GAME_LOOP.CanvasMouseListener(inputEventQueue);
-		var gameLoop = new GAME_LOOP.GameLoop(gameEntities, inputEventQueue, REVERSI.UI.BOARD_SIZE, REVERSI.UI.BOARD_SIZE);
-		gameLoop.start();
+		new REVERSI.UIController();
 	};
+	
 	</script>
 </head>
 <body>
 	<center>
+		<br>
+		<br>
+		<div style="text-align: right; width: 400px;display: block;">
+			<div>
+				Starting (black) player :
+				<select id="blackPlayerOwnerSelect">
+					<option value="HUMAN">Human</option>
+					<option value="CPU">A.I.</option>
+				</select>
+			</div>
+			<div>
+				Difficulty :
+				<select id="minimaxEvaluationHorizon">
+					<option value="2">Very easy</option>
+					<option value="3">Easy</option>
+					<option value="4" selected="selected">Medium</option>
+					<option value="5">Hard</option>
+				</select>
+			</div>
+		</div>
+		<br>
+		<br>
+		<div>	
+			<input type="button" id="startGameButton" value="Start">
+		</div>
+		<br>
+		<br>
+		<div id="gameOutcomeDiv" style="font-size: 1.2em; color: #FF9933;">
+		</div>
+		<br>
+		<br>
 		<canvas id="canvas"></canvas>
 	</center>
 </body>

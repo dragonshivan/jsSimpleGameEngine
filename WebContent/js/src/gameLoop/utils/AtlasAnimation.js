@@ -53,8 +53,9 @@ GAME_LOOP.AtlasAnimation.prototype.onGameStateUpdate = function() {
 	this.frameIdx += this.frameIdxIncrem; 
 	if(this.getActualFrameIdx() >= this.animationFramesCrops.length) {
 		if(!this.wrapAround) {
-			this.finished = true;
+			this.finished = false;
 			this.started = false;
+			this.frameIdx = -this.frameIdxIncrem;
 		} else {
 			this.frameIdx = 0;
 		}

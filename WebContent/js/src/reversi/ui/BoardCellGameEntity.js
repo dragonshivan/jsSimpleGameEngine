@@ -5,10 +5,9 @@ var REVERSI = REVERSI = REVERSI || {};
  * @constructor
  * @param {Number} cellX
  * @param {Number} cellY
- * @param {REVERSI.TokenType} tokenType
  * @returns {REVERSI.BoardCellGameEntity}
  */
-REVERSI.BoardCellGameEntity = function(cellX, cellY, tokenType) {
+REVERSI.BoardCellGameEntity = function(cellX, cellY) {
 	GAME_LOOP.GameEntity.call(this, 
 			cellX * REVERSI.UI.CELL_SIZE, 
 			cellY * REVERSI.UI.CELL_SIZE, 
@@ -17,7 +16,14 @@ REVERSI.BoardCellGameEntity = function(cellX, cellY, tokenType) {
 	
 	this.cellX = cellX;
 	this.cellY = cellY;
-	this.tokenType = tokenType;
+	if((cellX == 3 && cellY == 3) || (cellX == 4 && cellY == 4)) {
+		this.tokenType = REVERSI.TOKEN_TYPE_WHITE;
+	} else if((cellX == 3 && cellY == 4) || (cellX == 4 && cellY == 3)) {
+		this.tokenType = REVERSI.TOKEN_TYPE_BLACK;
+	} else {
+		this.tokenType = REVERSI.TOKEN_TYPE_EMPTY;
+	}
+	
 	
 	this.imgWhiteToken = new Image();
 	this.imgWhiteToken.src = "img/token_white.png";
@@ -34,13 +40,13 @@ REVERSI.BoardCellGameEntity = function(cellX, cellY, tokenType) {
 	this.tokenAnimationB2W = new GAME_LOOP.AtlasAnimation(
 			REVERSI.UI.TOKEN_ROTATION_IMAGE_ATLAS, 
 			REVERSI.UI.TOKEN_ROTATION_FRAME_CROPS_B2W, 
-			11,
-			true);
+			11);
 	this.tokenAnimationW2B = new GAME_LOOP.AtlasAnimation(
 			REVERSI.UI.TOKEN_ROTATION_IMAGE_ATLAS, 
 			REVERSI.UI.TOKEN_ROTATION_FRAME_CROPS_W2B, 
-			11,
-			true);
+			11);
+	
+	this.currentFlipAnimation;
 };
 
 REVERSI.BoardCellGameEntity.prototype = Object.create(GAME_LOOP.GameEntity.prototype);
@@ -49,8 +55,42 @@ REVERSI.BoardCellGameEntity.prototype.constructor = REVERSI.BoardCellGameEntity;
 /**
  * @public
  */
+REVERSI.BoardCellGameEntity.prototype.setToken =  function(tokenType) {
+	this.tokenType = tokenType;
+};
+
+/**
+ * @public
+ */
+REVERSI.BoardCellGameEntity.prototype.flip =  function() {
+	this.tokenType = this.tokenType.opponentTokenType;
+	this.currentFlipAnimation = this.tokenAnimationB2W;
+	if(this.tokenType === REVERSI.TOKEN_TYPE_BLACK) {
+		this.currentFlipAnimation = this.tokenAnimationW2B;
+	}
+	this.currentFlipAnimation.start();
+};
+
+/**
+ * @public
+ */
+REVERSI.BoardCellGameEntity.prototype.isFlipping =  function() {
+	if(this.currentFlipAnimation === undefined) {
+		return false;
+	}
+	if(!this.currentFlipAnimation.isStarted()) {
+		return false;
+	}
+	return !this.currentFlipAnimation.isFinished();
+};
+
+/**
+ * @public
+ */
 REVERSI.BoardCellGameEntity.prototype.updateState =  function() {
-	
+	if(this.isFlipping()) {
+		this.currentFlipAnimation.onGameStateUpdate();
+	}
 };
 
 /**
@@ -62,11 +102,15 @@ REVERSI.BoardCellGameEntity.prototype.updateGraphics =  function(context) {
 		context.drawImage(this.imgHighlight, this.x + 1, this.y + 1, this.width - 1, this.height - 1);
 	}
 	
-	if(this.tokenType !== REVERSI.TOKEN_TYPE_EMPTY) {
-		var img = this.imgWhiteToken;
-		if(this.tokenType === REVERSI.TOKEN_TYPE_BLACK) {
-			img = this.imgBlackToken;
+	if(this.isFlipping()) {
+		this.currentFlipAnimation.onGraphicsUpdate(context, this.x + this.imgPadding, this.y + this.imgPadding);
+	} else {
+		if(this.tokenType !== REVERSI.TOKEN_TYPE_EMPTY) {
+			var img = this.imgWhiteToken;
+			if(this.tokenType === REVERSI.TOKEN_TYPE_BLACK) {
+				img = this.imgBlackToken;
+			}
+			context.drawImage(img, this.x + this.imgPadding, this.y + this.imgPadding, this.imgSize, this.imgSize);
 		}
-		context.drawImage(img, this.x + this.imgPadding, this.y + this.imgPadding, this.imgSize, this.imgSize);
 	}
 };
