@@ -1,0 +1,1 @@
+"c:\Program Files\Java\jdk1.7.0_51\bin\java" -jar -Xmx1g JsTestDriver-1.3.5.jar --port 42442 --browser "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"

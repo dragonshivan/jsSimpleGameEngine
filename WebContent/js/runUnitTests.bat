@@ -1,0 +1,1 @@
+"c:\Program Files\Java\jdk1.7.0_51\bin\java" -jar -Xmx512m JsTestDriver-1.3.5.jar --server http://localhost:42442 --tests all %1 %2 %3 %4

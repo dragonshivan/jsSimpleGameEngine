@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+	<title>Minimax Reversi</title>
+	
+	<link type="text/css" href="../../css/main.css" rel="stylesheet">
+	
+	<script src="../../js/lib/jquery-1.11.1_.js"></script>
+	<script src="../../js/src/gameLoop/GameLoopConstants.js"></script>
+	<script src="../../js/src/gameLoop/GameLoop.js"></script>
+	<script src="../../js/src/gameLoop/GameEntity.js"></script>
+	<script src="../../js/src/gameLoop/UserInputListener.js"></script>
+	<script src="../../js/src/gameLoop/utils/AtlasAnimation.js"></script>
+	<script src="../../js/src/gameLoop/utils/ImageCrop.js"></script>
+	
+	<script src="../../js/src/minimax/MinimaxConstants.js"></script>
+	<script src="../../js/src/minimax/Evaluator.js"></script>
+	<script src="../../js/src/minimax/GameArbiter.js"></script>
+	<script src="../../js/src/minimax/GameState.js"></script>
+	<script src="../../js/src/minimax/GameTree.js"></script>
+	<script src="../../js/src/minimax/GameTreeNodesHashtable.js"></script>
+		
+	<script src="../../js/src/reversi/ReversiConstants.js"></script>
+	<script src="../../js/src/reversi/ReversiEvaluationCriterion.js"></script>
+	<script src="../../js/src/reversi/ReversiEvaluator.js"></script>
+	<script src="../../js/src/reversi/ReversiGameState.js"></script>
+	<script src="../../js/src/reversi/ReversiGameStateHelper.js"></script>
+	<script src="../../js/src/reversi/ui/BoardGameEntity.js"></script>
+	<script src="../../js/src/reversi/ui/BoardCellGameEntity.js"></script>
+	<script src="../../js/src/reversi/ui/GameUIController.js"></script>
+	<script>
+	$(document).ready(main);
+	
+	function main() {
+		
+		var gameBoardEntity = new REVERSI.BoardGameEntity();
+			
+		var gameEntitiesIdx = 0;
+		var gameEntities = [];
+		var boardCellGameEntities = [];
+		gameEntities[gameEntitiesIdx++] = gameBoardEntity;		
+		for(var x = 0; x < 8; x++) {
+			boardCellGameEntities[x] = [];
+			for(var y = 0; y < 8; y++) {
+				var boardCellGameEntity = new REVERSI.BoardCellGameEntity(x, y, REVERSI.TOKEN_TYPE_EMPTY);
+				gameEntities[gameEntitiesIdx++] = boardCellGameEntity;
+				boardCellGameEntities[x][y] = boardCellGameEntity;
+			}
+		}
+		gameEntities[gameEntitiesIdx++] = new REVERSI.GameUIController(boardCellGameEntities);	
+		
+		var inputEventQueue = new GAME_LOOP.Queue(10);
+		new GAME_LOOP.CanvasMouseListener(inputEventQueue);
+		var gameLoop = new GAME_LOOP.GameLoop(gameEntities, inputEventQueue, REVERSI.UI.BOARD_SIZE, REVERSI.UI.BOARD_SIZE);
+		gameLoop.start();
+	};
+	</script>
+</head>
+<body>
+	<center>
+		<canvas id="canvas"></canvas>
+	</center>
+</body>
+</html>
