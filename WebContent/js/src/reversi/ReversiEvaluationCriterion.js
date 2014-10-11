@@ -1,4 +1,4 @@
-var REVERSI = REVERSI = REVERSI || {};
+var REVERSI = REVERSI || {};
 
 /**
  * @public

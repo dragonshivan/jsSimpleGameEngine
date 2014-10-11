@@ -1,4 +1,4 @@
-var REVERSI = REVERSI = REVERSI || {};
+var REVERSI = REVERSI || {};
 
 REVERSI.BOARD_SIZE = 8;
 
@@ -21,7 +21,7 @@ REVERSI.POSITION_MASK = function() {
 				if(8 * y + x < 31) {
 					binaryStr += binaryAllZero.substr(8 * y + x);
 				}
-				arr[x][y] = Number.parseInt(binaryStr, 2);
+				arr[x][y] = parseInt(binaryStr, 2);
 			}
 		}
 	}
@@ -171,7 +171,7 @@ REVERSI.DEBUG_HELPER;
 
 REVERSI.EVALUATION_CRITERIA_DICTIONARY;
 
-REVERSI.UI = {};
+REVERSI.UI = REVERSI.UI || {};
 REVERSI.UI.BOARD_SIZE = 700;
 REVERSI.UI.CELL_SIZE = REVERSI.UI.BOARD_SIZE / 8;
 REVERSI.UI.TOKEN_ROTATION_IMAGE_ATLAS = function() {

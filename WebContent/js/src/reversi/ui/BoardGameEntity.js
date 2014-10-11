@@ -1,4 +1,4 @@
-var REVERSI = REVERSI = REVERSI || {};
+var REVERSI = REVERSI || {};
 
 REVERSI.BoardGameEntity = function() {
 	GAME_LOOP.GameEntity.call(this, 0, 0, REVERSI.UI.BOARD_SIZE, REVERSI.UI.BOARD_SIZE, -1);

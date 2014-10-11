@@ -18,7 +18,7 @@ GAME_LOOP.GameLoop = function(gameEntities, inputEventQueue, canvasWidth, canvas
 			window.oRequestAnimationFrame; /* Opera */
 	
 	if(!window.requestAnimationFrame) {
-		throw new Exception("Failed to get requestAnimationFrame funtion");
+		throw "Failed to get requestAnimationFrame function";
 	}
 	
 	this.canvas = document.getElementById(GAME_LOOP.CANVAS_ID);
