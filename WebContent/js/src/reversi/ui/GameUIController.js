@@ -15,6 +15,8 @@ REVERSI.GameUIController = function() {
 	this.gameArbiter;
 	
 	this.humanMovePosition;
+	
+	this.messageOutputDiv = $("#messageOutputDiv");
 };
 
 REVERSI.GameUIController.prototype = Object.create(GAME_LOOP.GameEntity.prototype);
@@ -76,17 +78,24 @@ REVERSI.GameUIController.prototype.updateState =  function() {
 		return;
 	}
 	if(this.reversiGameState.isGameEnded()) {
+		this.outputEndGameMessage();
 		return;
 	}
 	if(this.reversiGameState.getPlayerToMove() === this.gameArbiter.getCpuPlayer()) {
+		this.outputMessage("A.I. is looking " + this.reversiEvaluator.getEvaluationHorizon(this.reversiGameState) + " moves ahead");
 		this.reversiGameState = this.gameArbiter.advanceGame();
 		this.updateCellsTokens();
 	} else {
+		this.outputMessage("A.I. moved after looking " 
+				+ this.reversiEvaluator.getEvaluationHorizon(this.reversiGameState) 
+				+ " moves ahead (took " + this.gameArbiter.cpuMoveTimeLastMs + " ms.)");
+		this.updatePossibleMoves();
 		if(this.humanMovePosition !== undefined) {
 			try {
 				this.reversiGameState = this.gameArbiter.advanceGame(this.humanMovePosition);
 				this.updateCellsTokens();	
 				this.humanMovePosition = undefined;
+				this.clearPossibleMoves();
 			} catch(e) {
 				console.log(e);
 				this.humanMovePosition = undefined;
@@ -146,6 +155,28 @@ REVERSI.GameUIController.prototype.updateCellsTokens =  function() {
 /**
  * @private
  */
+REVERSI.GameUIController.prototype.updatePossibleMoves =  function() {
+	var possibleMoves = REVERSI.REVERSI_GAME_STATE_HELPER.getPossibleMoves(this.gameArbiter.humanPlayer, this.reversiGameState);
+	for(var i = 0; i < possibleMoves.length; i++) {
+		var possibleMove = possibleMoves[i];
+		this.boardCellGameEntities[possibleMove.position.x][possibleMove.position.y].possibleMove = true;
+	}
+};
+
+/**
+ * @private
+ */
+REVERSI.GameUIController.prototype.clearPossibleMoves =  function() {
+	for(var x = 0; x < 8; x++) {
+		for(var y = 0; y < 8; y++) {
+			this.boardCellGameEntities[x][y].possibleMove = false;
+		}
+	}
+};
+
+/**
+ * @private
+ */
 REVERSI.GameUIController.prototype.areTokensFlipping = function() {
 	for(var x = 0; x < 8; x++) {
 		for(var y = 0; y < 8; y++) {
@@ -155,4 +186,28 @@ REVERSI.GameUIController.prototype.areTokensFlipping = function() {
 		}
 	}
 	return false;
+};
+
+/**
+ * @private
+ */
+REVERSI.GameUIController.prototype.outputMessage = function(msg) {
+	this.messageOutputDiv.empty();
+	this.messageOutputDiv.append(msg);
+};
+
+/**
+ * @private
+ */
+REVERSI.GameUIController.prototype.outputEndGameMessage = function(msg) {
+	var gameOutcome = this.gameArbiter.getGameOutcome(this.reversiGameState);
+	
+	var humanWinLoseMsg = "won";
+	if(gameOutcome.winningPlayer === this.gameArbiter.cpuPlayer) {
+		humanWinLoseMsg = "lost";
+	}
+	
+	var msg = "Game ended: " 
+		+ "You have " + humanWinLoseMsg + ".";
+	this.outputMessage(msg);
 };

@@ -24,13 +24,9 @@ REVERSI.BoardCellGameEntity = function(cellX, cellY) {
 		this.tokenType = REVERSI.TOKEN_TYPE_EMPTY;
 	}
 	
-	
-	this.imgWhiteToken = new Image();
-	this.imgWhiteToken.src = "img/token_white.png";
-	this.imgBlackToken = new Image();
-	this.imgBlackToken.src = "img/token_black.png";
-	this.imgHighlight = new Image();
-	this.imgHighlight.src = "img/cell_highlight.png";
+	this.imgWhiteToken = REVERSI.UI.IMG_TOKEN_WHITE;
+	this.imgBlackToken = REVERSI.UI.IMG_TOKEN_BLACK;
+	this.imgHighlight = REVERSI.UI.IMG_CELL_HIGHLIGHT;
 	
 	this.imgSize = REVERSI.UI.CELL_SIZE - REVERSI.UI.CELL_SIZE / 8;
 	this.imgPadding = (REVERSI.UI.CELL_SIZE / 8) / 2;
@@ -47,6 +43,8 @@ REVERSI.BoardCellGameEntity = function(cellX, cellY) {
 			11);
 	
 	this.currentFlipAnimation;
+	
+	this.possibleMove = false;
 };
 
 REVERSI.BoardCellGameEntity.prototype = Object.create(GAME_LOOP.GameEntity.prototype);
@@ -100,6 +98,11 @@ REVERSI.BoardCellGameEntity.prototype.updateState =  function() {
 REVERSI.BoardCellGameEntity.prototype.updateGraphics =  function(context) {
 	if(this.highlight) {
 		context.drawImage(this.imgHighlight, this.x + 1, this.y + 1, this.width - 1, this.height - 1);
+	}
+	
+	if(this.possibleMove) {
+		context.drawImage(REVERSI.UI.IMG_POSSIBLE_MOVE, 
+				this.x + this.imgPadding, this.y + this.imgPadding, this.imgSize, this.imgSize);
 	}
 	
 	if(this.isFlipping()) {

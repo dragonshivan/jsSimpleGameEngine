@@ -174,10 +174,35 @@ REVERSI.EVALUATION_CRITERIA_DICTIONARY;
 REVERSI.UI = REVERSI.UI || {};
 REVERSI.UI.BOARD_SIZE = 700;
 REVERSI.UI.CELL_SIZE = REVERSI.UI.BOARD_SIZE / 8;
+REVERSI.UI.IMG_TOKEN_WHITE = function() {
+	var imgWhiteToken = new Image();
+	imgWhiteToken.src = "img/token_white.png";
+	return imgWhiteToken;
+}();
+REVERSI.UI.IMG_TOKEN_BLACK = function() {
+	var imgBlackToken = new Image();
+	imgBlackToken.src = "img/token_black.png";
+	return imgBlackToken;
+}();
+REVERSI.UI.IMG_BOARD = function() {
+	var img = new Image();
+	img.src = "img/board.gif";
+	return img;
+}();
 REVERSI.UI.TOKEN_ROTATION_IMAGE_ATLAS = function() {
 	var tokenImageAtlast = new Image();
 	tokenImageAtlast.src = "img/token_rotation_slanted.png";
 	return tokenImageAtlast;
+}();
+REVERSI.UI.IMG_CELL_HIGHLIGHT = function() {
+	var tokenImageAtlast = new Image();
+	tokenImageAtlast.src = "img/cell_highlight.png";
+	return tokenImageAtlast;
+}();
+REVERSI.UI.IMG_POSSIBLE_MOVE = function() {
+	var img = new Image();
+	img.src = "img/possible_move.png";
+	return img;
 }();
 REVERSI.UI.TOKEN_ROTATION_FRAME_CROPS_B2W = 
 	[new GAME_LOOP.ImageCrop(0 * 109, 0, 0, 0, 109, 109, REVERSI.UI.CELL_SIZE - REVERSI.UI.CELL_SIZE / 8, REVERSI.UI.CELL_SIZE - REVERSI.UI.CELL_SIZE / 8),
