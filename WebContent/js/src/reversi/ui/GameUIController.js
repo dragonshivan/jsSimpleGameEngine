@@ -128,8 +128,12 @@ REVERSI.GameUIController.prototype.highligtCell =  function(inputEvent) {
 	if(inputEvent.type == GAME_LOOP.IO.MOUSE_OUT) {
 		return;
 	}
-	this.boardCellGameEntities[Math.floor(inputEvent.canvasX / REVERSI.UI.CELL_SIZE)]
-		[Math.floor(inputEvent.canvasY / REVERSI.UI.CELL_SIZE)].highlight = true;	
+	var cellX = Math.floor(inputEvent.canvasX / REVERSI.UI.CELL_SIZE);
+	var cellY = Math.floor(inputEvent.canvasY / REVERSI.UI.CELL_SIZE);
+	if(cellX > 7 || cellY > 7) {
+		return;
+	}
+	this.boardCellGameEntities[cellX][cellY].highlight = true;
 };
 
 /**
